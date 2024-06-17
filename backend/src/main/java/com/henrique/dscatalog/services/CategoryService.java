@@ -3,7 +3,7 @@ package com.henrique.dscatalog.services;
 import com.henrique.dscatalog.dto.CategoryDTO;
 import com.henrique.dscatalog.entities.Category;
 import com.henrique.dscatalog.repositories.CategoryRepository;
-import com.henrique.dscatalog.services.exceptions.EntityNotFoundException;
+import com.henrique.dscatalog.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public CategoryDTO findById(Long id){
         Category entity = categoryRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Entity not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
         return new CategoryDTO(entity);
     }
 
