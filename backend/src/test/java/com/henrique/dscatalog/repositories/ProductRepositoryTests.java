@@ -27,6 +27,20 @@ public class ProductRepositoryTests {
     }
 
     @Test
+    public void findByIdShouldReturnNonEmptyOptionalWhenExistingId(){
+        Optional<Product> result = productRepository.findById(existingId);
+
+        Assertions.assertTrue(result.isPresent());
+    }
+
+    @Test
+    public void findByIdShouldReturnEmptyOptionalWhenNonExistingId(){
+        Optional<Product> result = productRepository.findById(nonExistingId);
+
+        Assertions.assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void saveShouldPersistWithAutoIncrementWhenIdIsNull(){
         Product product = Factory.createProduct();
         product.setId(null);
