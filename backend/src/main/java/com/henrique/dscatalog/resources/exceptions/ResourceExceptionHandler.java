@@ -1,4 +1,4 @@
-package com.henrique.dscatalog.repositories.exceptions;
+package com.henrique.dscatalog.resources.exceptions;
 
 import com.henrique.dscatalog.services.exceptions.DatabaseException;
 import com.henrique.dscatalog.services.exceptions.ResourceNotFoundException;

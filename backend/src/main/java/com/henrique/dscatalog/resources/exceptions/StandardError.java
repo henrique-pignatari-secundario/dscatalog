@@ -1,4 +1,4 @@
-package com.henrique.dscatalog.repositories.exceptions;
+package com.henrique.dscatalog.resources.exceptions;
 
 import java.io.Serializable;
 import java.time.Instant;
