@@ -3,6 +3,7 @@ package com.henrique.dscatalog.services;
 import com.henrique.dscatalog.dto.RoleDto;
 import com.henrique.dscatalog.dto.UserDTO;
 import com.henrique.dscatalog.dto.UserInsertDTO;
+import com.henrique.dscatalog.dto.UserUpdateDTO;
 import com.henrique.dscatalog.entities.Role;
 import com.henrique.dscatalog.entities.User;
 import com.henrique.dscatalog.repositories.RoleRepository;
@@ -52,7 +53,7 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO update(Long id, UserDTO dto) {
+    public UserDTO update(Long id, UserUpdateDTO dto) {
         try{
             User entity = userRepository.getReferenceById(id);
             copyDtoToEntity(dto, entity);
