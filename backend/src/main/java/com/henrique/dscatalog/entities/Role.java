@@ -1,13 +1,13 @@
 package com.henrique.dscatalog.entities;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "tb_role")
-public class Role implements Serializable {
+public class Role implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +29,7 @@ public class Role implements Serializable {
         this.id = id;
     }
 
+    @Override
     public String getAuthority() {
         return authority;
     }
