@@ -3,11 +3,13 @@ package com.henrique.dscatalog.resources;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.henrique.dscatalog.dto.ProductDTO;
 import com.henrique.dscatalog.tests.Factory;
+import com.henrique.dscatalog.tests.TokenUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -26,16 +28,24 @@ public class ProductResourceIT {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private TokenUtil tokenUtil;
 
     private Long existingId;
     private Long nonExistingId;
     private Long countTotalProducts;
+
+    private String username, password, bearerToken;
 
     @BeforeEach
     void setUp() throws Exception{
         existingId = 1L;
         nonExistingId = 1000L;
         countTotalProducts = 25L;
+
+        username = "maria@gmail.com";
+        password = "123456";
+        bearerToken = tokenUtil.obtainAccessToken(mockMvc, username, password);
     }
 
     @Test
@@ -62,6 +72,7 @@ public class ProductResourceIT {
         mockMvc
                 .perform(put("/products/{id}", existingId)
                         .content(jsonBody)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
