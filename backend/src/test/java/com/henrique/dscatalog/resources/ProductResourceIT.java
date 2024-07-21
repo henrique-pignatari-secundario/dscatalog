@@ -93,6 +93,7 @@ public class ProductResourceIT {
         mockMvc
                 .perform(put("/products/{id}", nonExistingId)
                         .content(jsonBody)
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + bearerToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
                 )
