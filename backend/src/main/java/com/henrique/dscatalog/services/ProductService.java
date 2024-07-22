@@ -4,18 +4,25 @@ import com.henrique.dscatalog.dto.CategoryDTO;
 import com.henrique.dscatalog.dto.ProductDTO;
 import com.henrique.dscatalog.entities.Category;
 import com.henrique.dscatalog.entities.Product;
+import com.henrique.dscatalog.projections.ProductProjection;
 import com.henrique.dscatalog.repositories.CategoryRepository;
 import com.henrique.dscatalog.repositories.ProductRepository;
 import com.henrique.dscatalog.services.exceptions.DatabaseException;
 import com.henrique.dscatalog.services.exceptions.ResourceNotFoundException;
+import com.henrique.dscatalog.util.Utils;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -24,10 +31,23 @@ public class ProductService {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @SuppressWarnings("unchecked")
     @Transactional(readOnly = true)
-    public Page<ProductDTO> findAllPaged(Pageable pageable){
-        Page<Product> result = productRepository.findAll(pageable);
-        return result.map(ProductDTO::new);
+    public Page<ProductDTO> findAllPaged(String name, String categoryId, Pageable pageable){
+        List<Long> categoryIds = List.of();
+        if(!"0".equals(categoryId)){
+            categoryIds = Arrays.stream(categoryId.split(",")).map(Long::parseLong).toList();
+        }
+
+        Page<ProductProjection> page = productRepository.searchProducts(categoryIds, name, pageable);
+        List<Long> productIds = page.map(ProductProjection::getId).toList();
+
+        List<Product> entities = productRepository.searchProductsWithCategories(productIds);
+        entities = (List<Product>) Utils.replace(page.getContent(), entities);
+
+        List<ProductDTO> dtos = entities.stream().map(p -> new ProductDTO(p, p.getCategories())).toList();
+
+        return new PageImpl<>(dtos, page.getPageable(), page.getTotalElements());
     }
 
     @Transactional(readOnly = true)

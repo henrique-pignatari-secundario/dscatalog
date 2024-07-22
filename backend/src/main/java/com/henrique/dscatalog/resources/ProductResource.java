@@ -1,6 +1,7 @@
 package com.henrique.dscatalog.resources;
 
 import com.henrique.dscatalog.dto.ProductDTO;
+import com.henrique.dscatalog.projections.ProductProjection;
 import com.henrique.dscatalog.services.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,11 @@ public class ProductResource {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable){
-        Page<ProductDTO> list = productService.findAllPaged(pageable);
+    public ResponseEntity<Page<ProductDTO>> findAll(
+            @RequestParam(value = "name", defaultValue = "") String name,
+            @RequestParam(value = "categoryId", defaultValue = "0") String categoryId,
+            Pageable pageable){
+        Page<ProductDTO> list = productService.findAllPaged(name, categoryId, pageable);
 
         return ResponseEntity.ok(list);
     }

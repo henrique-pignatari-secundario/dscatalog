@@ -1,8 +1,8 @@
 package com.henrique.dscatalog.entities;
 
+import com.henrique.dscatalog.projections.IdProjection;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tb_product")
-public class Product implements Serializable {
+public class Product implements IdProjection<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +42,7 @@ public class Product implements Serializable {
         this.date = date;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
