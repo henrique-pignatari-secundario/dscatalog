@@ -31,11 +31,17 @@ public class UserResource {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> findById(@PathVariable Long id){
-        UserDTO list = userService.findById(id);
-        return ResponseEntity.ok(list);
+        UserDTO dto = userService.findById(id);
+        return ResponseEntity.ok(dto);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_OPERATOR', 'ROLE_ADMIN')")
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> findMe(){
+        UserDTO dto = userService.findMe();
+        return ResponseEntity.ok(dto);
+    }
+
     @PostMapping
     public ResponseEntity<UserDTO> insert(@Valid @RequestBody UserInsertDTO insertDto){
         UserDTO dto = userService.insert(insertDto);

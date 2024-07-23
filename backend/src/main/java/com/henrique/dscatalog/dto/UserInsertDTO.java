@@ -1,9 +1,13 @@
 package com.henrique.dscatalog.dto;
 
 import com.henrique.dscatalog.services.validation.UserInsertValid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @UserInsertValid
 public class UserInsertDTO extends UserDTO{
+    @NotBlank(message = "Compo obrigatório")
+    @Size(min = 8, message = "Deve ter no mínimo 8 caracteres")
     private String password;
 
     public UserInsertDTO() {

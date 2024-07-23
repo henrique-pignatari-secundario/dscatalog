@@ -36,6 +36,8 @@ public class UserService implements UserDetailsService {
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private AuthService authService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -60,6 +62,12 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
+    public UserDTO findMe(){
+        User entity = authService.authenticated();
+        return new UserDTO(entity);
+    }
+
+    @Transactional(readOnly = true)
     public UserDTO findById(Long id){
         User entity = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Entity not found"));
@@ -70,6 +78,11 @@ public class UserService implements UserDetailsService {
     public UserDTO insert(UserInsertDTO dto) {
         User entity = new User();
         copyDtoToEntity(dto, entity);
+
+        entity.getRoles().clear();
+        Role role = roleRepository.findByAuthority("ROLE_OPERATOR");
+        entity.getRoles().add(role);
+
         entity.setPassword(passwordEncoder.encode(dto.getPassword()));
         entity = userRepository.save(entity);
 
